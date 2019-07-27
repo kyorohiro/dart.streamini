@@ -96,9 +96,11 @@ class Writer {
 
 class FilePath {
   String _date;
+  String _time;
   String _uuid;
 
   String get date => _date;
+  String get time => _time;
   String get uuid => _uuid;
   
   FilePath.fromCurrentFateTime() {
@@ -106,14 +108,17 @@ class FilePath {
     String y = datetime.year.toString();
     String m = zeroFilling(datetime.month.toString());
     String d = zeroFilling(datetime.day.toString());
+    String h = zeroFilling(datetime.hour.toString());
+    String mi = zeroFilling(datetime.minute.toString());
     String s = zeroFilling(datetime.second.toString());
-    this._date = "${y}_${m}_${d}_${s}";
+    this._date = "${y}_${m}_${d}";
+    this._time = "${h}_${mi}";//_${s}";
     this._uuid = lib.Uuid.createUUID();
   }
 
   @override
   String toString(){
-    return this._date+"/"+this._uuid;
+    return this._date+"/"+this._time+"/"+this._uuid;
   }
 
   String zeroFilling(String v) {
