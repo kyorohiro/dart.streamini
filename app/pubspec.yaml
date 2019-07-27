@@ -1,4 +1,4 @@
-name: app
+name: streamini
 description: A sample command-line application.
 # version: 1.0.0
 # homepage: https://www.example.com
@@ -15,3 +15,5 @@ dev_dependencies:
   test: ^1.5.0
   args: 1.5.2
   tuple: 1.0.2
+  path: 1.6.4
+
