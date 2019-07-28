@@ -40,5 +40,7 @@ RUN mkdir /works/streamini
 #
 WORKDIR /works/streamini
 EXPOSE 8443 8080
+COPY . /works/streamini
+RUN pub get
 #VOLUME [ "/works/streamini" ]
 #CMD [ "/works/code-server", "--allow-http", "--no-auth", "/works/streamini" ]
