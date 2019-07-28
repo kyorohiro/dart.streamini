@@ -31,7 +31,7 @@
             "containerPort": 8080
           }
         ],
-        "command": ["/works/codde-server", "--allow-http","--no-auth"]
+        "command": ["/works/code-server", "--allow-http","--no-auth"]
       }
     ]
 }  
