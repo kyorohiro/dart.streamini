@@ -43,15 +43,18 @@ onMessageRequest(DB db, io.HttpRequest req) async {
       }
       await req.response.write("id:"+writer.uuid);
     }catch(e){
+      print(e);
     }
     try {
       writer.close();
     } catch(e){
+      print(e);
     }
 
     try{
       await req.response.close();
     } catch(e){
+      print(e);
     }
 
 }
@@ -64,6 +67,7 @@ onView(DB db, io.HttpRequest req) async {
       try {
         reader = await db.createReaderFromUuid(uuid);
       } catch(e){
+        print(e);
       }
       try {
       do{
@@ -78,17 +82,17 @@ onView(DB db, io.HttpRequest req) async {
         }
       }while(true);
       } catch(e){
-
+        print(e);
       }
       try {
         await reader.close();
       } catch(e){
-
+        print(e);
       }
       try {
         await req.response.close();
       } catch(e){
-
+        print(e);
       }
 }
 
@@ -103,7 +107,7 @@ main(List<String> arguments) async {
   io.HttpServer server = await io.HttpServer.bind(args.address, args.port);
   print("binding");
   server.listen((io.HttpRequest req) async {
-    print("path==>${req.uri.path}");
+    print("path==>${req.uri.path}<==");
     try {
       if(req.uri.path.startsWith(uploadPath)) {
         onUploadRequest(db, req);
@@ -123,6 +127,7 @@ main(List<String> arguments) async {
       try{
         await req.response.close();
       }catch(e){
+        print(e);
       }
     }
   });

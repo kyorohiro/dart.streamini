@@ -17,7 +17,7 @@
           {
             "sourceVolume": "home-v",
             "containerPath": "/works/streamini",
-            "readOnly": true
+            "readOnly": false
           }
         ],
         "portMappings": [
