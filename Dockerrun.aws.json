@@ -1,12 +1,6 @@
 {
     "AWSEBDockerrunVersion": "2",
     "volumes": [
-      {
-        "name": "home-v",
-        "host": {
-          "sourcePath": "/var/app/current/app"
-        }
-      }
     ],
     "containerDefinitions": [
       {
@@ -15,11 +9,6 @@
         "essential": true,
         "memory": 2048,
         "mountPoints": [
-          {
-            "sourceVolume": "home-v",
-            "containerPath": "/works/streamini",
-            "readOnly": false
-          }
         ],
         "portMappings": [
           {
