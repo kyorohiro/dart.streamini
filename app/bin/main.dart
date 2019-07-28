@@ -9,14 +9,29 @@ const String streamPath = "/stream";
 const String viewPath = "/view";
 
 onUploadRequest(DB db, io.HttpRequest req) async {
-    Writer writer = await db.createWriter();
-    req.listen((List<int> bytes){
-      writer.add(bytes);
-    }).onDone((){
-      writer.close();
+    Writer writer;
+    try {
+      writer = await db.createWriter();
+    } catch(e){
+    }
+
+    try {
+      await for(List<int> bytes in req) {
+        writer.add(bytes);
+      }
       req.response.write("id:"+writer.uuid);
-      req.response.close();
-    });
+    } catch(e){
+    }
+    try {
+      writer.close();
+    } catch(e){
+    }
+
+    try{
+      await req.response.close();
+    } catch(e){
+    }
+
 }
 
 onMessageRequest(DB db, io.HttpRequest req) async {
@@ -43,10 +58,14 @@ onMessageRequest(DB db, io.HttpRequest req) async {
 
 onView(DB db, io.HttpRequest req) async {
       String uuid = req.uri.path.replaceFirst(viewPath+"/", "");
-      Reader reader = await db.createReaderFromUuid(uuid);
-
       Uint8List buffer = Uint8List(10*1000);
       int length = 0;
+      Reader reader;
+      try {
+        reader = await db.createReaderFromUuid(uuid);
+      } catch(e){
+      }
+      try {
       do{
         length = await reader.readInto(buffer);
         if(length <= 0) {
@@ -58,8 +77,19 @@ onView(DB db, io.HttpRequest req) async {
           req.response.add(buffer.sublist(0, length));
         }
       }while(true);
-      reader.close();
-      await req.response.close();
+      } catch(e){
+
+      }
+      try {
+        await reader.close();
+      } catch(e){
+
+      }
+      try {
+        await req.response.close();
+      } catch(e){
+
+      }
 }
 
 main(List<String> arguments) async {
