@@ -11,7 +11,7 @@
     "containerDefinitions": [
       {
         "name": "home",
-        "image": "xxx",
+        "image": "470118992782.dkr.ecr.ap-northeast-1.amazonaws.com/streamini",
         "essential": true,
         "mountPoints": [
           {
