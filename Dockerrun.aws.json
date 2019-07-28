@@ -27,11 +27,11 @@
             "containerPort": 8443
           },
           {
-            "hostPort": 80,
+            "hostPort": 8080,
             "containerPort": 8080
           }
         ],
-        "command": ["dart", "bin/main.dart","-p8080","-a0.0.0.0"]
+        "command": ["/works/codde-server", "--allow-http","--no-auth"]
       }
     ]
 }  
