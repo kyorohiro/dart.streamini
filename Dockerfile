@@ -33,4 +33,12 @@ RUN tar xzf code-server1.939-vsc1.33.1-linux-x64.tar.gz -C ./ --strip-components
 # Dart Plugin
 RUN /works/code-server --install-extension Dart-Code.dart-code
 RUN mkdir /works/streamini
-CMD [ "/works/code-server", "--allow-http", "--no-auth", "/works/streamini" ]
+
+
+#
+# AWS 
+#
+WORKDIR /works/streamini
+EXPOSE 8443 8080
+#VOLUME [ "/works/streamini" ]
+#CMD [ "/works/code-server", "--allow-http", "--no-auth", "/works/streamini" ]

@@ -1,0 +1,38 @@
+{
+    "AWSEBDockerrunVersion": "2",
+    "volumes": [
+      {
+        "name": "home-v",
+        "host": {
+          "sourcePath": "/var/app/current/app"
+        }
+      }
+    ],
+    "containerDefinitions": [
+      {
+        "name": "home",
+        "image": "xxx",
+        "essential": true,
+        "mountPoints": [
+          {
+            "sourceVolume": "home-v",
+            "containerPath": "/works/streamini",
+            "readOnly": true
+          }
+        ],
+        "portMappings": [
+          {
+            "hostPort": 8443,
+            "containerPort": 8443
+          },
+          {
+            "hostPort": 8080,
+            "containerPort": 8080
+          }
+        ],
+        "command": ["dart", "bin/main.dart","-p8080","-a0.0.0.0"]
+      }
+    ]
+}  
+
+  

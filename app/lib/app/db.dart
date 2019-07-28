@@ -27,15 +27,18 @@ class DB {
   }
 
   Future<Writer> createWriter() async {
-    FilePath fp = FilePath.fromCurrentFateTime();
-    io.File file = new io.File(path.join(this.outoutDir, fp.toString()));
-    io.Directory dir = file.parent;
-//    if(!await dir.exists()) {
-//      await dir.create(recursive: true);
- //   } 
-
+    FilePath fp = FilePath.fromCurrentDateTime();
+    io.File file = io.File(path.join(this.outoutDir, fp.toString()));
     Writer w = Writer(await file.create(recursive: true));
     await w.init();
+    return w;
+  }
+
+  Future<Writer> createWriterFromUuid(String uuid) async {
+    FilePath fp = FilePath.fromCurrentDateTime();
+    io.File file = io.File(path.join(this.outoutDir, uuid));
+    Writer w = Writer(await file.create(recursive: true));
+    await w.init(index: await file.length());
     return w;
   }
 }
@@ -43,14 +46,15 @@ class DB {
 class Writer {
   io.File output;
   io.RandomAccessFile rand;
-  int index = 0;
+  int _index = 0;
 
   List<List<int>> _stack = [];
   
   Writer(this.output) {
   }
 
-  init() async {
+  init({index=0}) async {
+    _index = index;
     if(!await output.exists()) {
       await output.create(recursive: true);
     }
@@ -67,10 +71,11 @@ class Writer {
       return;
     }
     acting = true;
-    while(this._stack.length > 0) {
+    while(this._stack.isNotEmpty) {
       List<int> data = this._stack.removeAt(0);
+      await this.rand.setPosition(_index);
       await this.rand.writeFrom(data);
-      index = data.length;
+      _index += data.length;
     }
     acting = false;
     if(isClose) {
@@ -103,7 +108,7 @@ class FilePath {
   String get time => _time;
   String get uuid => _uuid;
   
-  FilePath.fromCurrentFateTime() {
+  FilePath.fromCurrentDateTime() {
     DateTime datetime = DateTime.now();
     String y = datetime.year.toString();
     String m = zeroFilling(datetime.month.toString());

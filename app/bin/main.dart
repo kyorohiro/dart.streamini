@@ -6,7 +6,6 @@ import 'package:streamini/app.dart';
 
 
 onUploadRequest(DB db, io.HttpRequest req) async {
-    FilePath fp = FilePath.fromCurrentDateTime();
     Writer writer = await db.createWriter();
     req.listen((List<int> bytes){
       writer.add(bytes);
@@ -17,11 +16,15 @@ onUploadRequest(DB db, io.HttpRequest req) async {
 }
 
 onMessageRequest(DB db, io.HttpRequest req) async {
-    FilePath fp = FilePath.fromCurrentDateTime();
-    Writer writer = await db.createWriter();
+      print("xxx1");
+
+    Writer writer = await db.createWriterFromUuid(req.uri.path.replaceFirst("/stream/", ""));
+      print("xxx1::"+writer.output.path);
     req.listen((List<int> bytes){
+      print("xxx2");
       writer.add(bytes);
     }).onDone((){
+       print("xxx3");
       writer.close();
       req.response.close();
     });
@@ -42,8 +45,8 @@ main(List<String> arguments) async {
     if(req.uri.path.startsWith("/upload")) {
       onUploadRequest(db, req);
     } 
-    else if(req.uri.path.startsWith("/stream")) {
-      
+    else if(req.uri.path.startsWith("/stream/")) {
+      onMessageRequest(db, req);
     }
   });
 }

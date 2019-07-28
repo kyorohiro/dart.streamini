@@ -6,7 +6,7 @@ services:
       - 8080:8080
       - 8443:8443
     volumes: 
-      - ../:/works/streamini
+      - ./:/works/streamini
     command: "/works/code-server --allow-http --no-auth /works/streamini"
 
 

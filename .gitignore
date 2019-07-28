@@ -13,3 +13,8 @@ doc/api/
 #
 .DS_Store
 .Trash-0
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
