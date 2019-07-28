@@ -29,17 +29,60 @@ class DB {
   Future<Writer> createWriter() async {
     FilePath fp = FilePath.fromCurrentDateTime();
     io.File file = io.File(path.join(this.outoutDir, fp.toString()));
-    Writer w = Writer(await file.create(recursive: true));
+    Writer w = Writer(await file.create(recursive: true),fp.toString());
     await w.init();
     return w;
   }
 
   Future<Writer> createWriterFromUuid(String uuid) async {
-    FilePath fp = FilePath.fromCurrentDateTime();
+    uuid = uuid.replaceAll(".", "-");
+    if(uuid.contains(new RegExp("""[^a-zA-Z0-9/]""")) && uuid.length > 1024) {
+      throw "worng param";
+    }
     io.File file = io.File(path.join(this.outoutDir, uuid));
-    Writer w = Writer(await file.create(recursive: true));
-    await w.init(index: await file.length());
-    return w;
+    try{
+      Writer w = Writer(await file.create(recursive: true),uuid);
+      await w.init(index: await file.length());
+      return w;
+    } catch(e){
+      
+    }
+  }
+
+  Future<Reader> createReaderFromUuid(String uuid) async {
+    io.File file = io.File(path.join(this.outoutDir, uuid));
+    Reader r = Reader(file);
+    await r.init(index: await file.length());
+    return r;
+  }
+}
+
+class Reader {
+  io.File input;
+  io.RandomAccessFile rand;
+  int _index = 0;
+
+  List<List<int>> _stack = [];
+  
+  Reader(this.input);
+
+  init({index=0}) async {
+    _index = index;
+    if(!await input.exists()) {
+      throw "not found";
+    }
+    this.rand =  await input.open(mode: io.FileMode.read);
+    if(rand == null){
+      print("======================================ZAS=");
+    }
+  }
+
+  Future<int> readInto(List<int> buffer, {int start=0, int end}) async {
+   return rand.readInto(buffer,start=start,end=end);
+  }
+
+  close() {
+    this.rand.close();
   }
 }
 
@@ -47,10 +90,11 @@ class Writer {
   io.File output;
   io.RandomAccessFile rand;
   int _index = 0;
+  String uuid;
 
   List<List<int>> _stack = [];
   
-  Writer(this.output) {
+  Writer(this.output,this.uuid) {
   }
 
   init({index=0}) async {
@@ -58,7 +102,13 @@ class Writer {
     if(!await output.exists()) {
       await output.create(recursive: true);
     }
-    this.rand =  await output.open(mode: io.FileMode.write);
+    io.FileMode mode = io.FileMode.write;
+    if(index == 0) {
+      mode = io.FileMode.write;
+    } else {
+      mode = io.FileMode.append;
+    }
+    this.rand =  await output.open(mode: mode);
     if(rand == null){
       print("======================================ZAS=");
     }
@@ -91,6 +141,7 @@ class Writer {
      end = data.length;
    }
    _stack.add(data.sublist(start,end));
+   act();
   }
 
   close() {

@@ -1,7 +1,8 @@
 import 'package:streamini/lib.dart';
-import 'package:test/test.dart';
+import 'package:test/test.dart' as t;
 
 void main() {
-  test('calculate', () {
+  t.test('', () {
+    
   });
 }
