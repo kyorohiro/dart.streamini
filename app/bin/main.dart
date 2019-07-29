@@ -52,6 +52,7 @@ onMessageRequest(DB db, io.HttpRequest req) async {
     }
 
     try{
+      await req.response.write("Welcome Streamini!!")
       await req.response.close();
     } catch(e){
       print(e);
