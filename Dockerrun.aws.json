@@ -13,7 +13,7 @@
         "name": "home",
         "image": "470118992782.dkr.ecr.ap-northeast-1.amazonaws.com/streamini:latest",
         "essential": true,
-        "memory": 512,
+        "memory": 2056,
         "mountPoints": [
           {
             "sourceVolume": "home-v",
